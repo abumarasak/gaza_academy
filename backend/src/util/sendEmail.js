@@ -1,8 +1,8 @@
-const nodeMailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 const path = require("path");
 const hbs = require("nodemailer-express-handlebars");
-// nodemailer Stuff
-const transporter = nodeMailer.createTransport({
+// Nodemailer Stuff
+const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
   port: 465,
   secure: true,
@@ -11,23 +11,31 @@ const transporter = nodeMailer.createTransport({
     pass: process.env.NOREPLY_PASSWORD,
   },
 });
-// Handlebars Stuff
-const handlebarsOptions = {
+const handlebarOptions = {
   viewEngine: {
-    extName: ".handelbars",
-    partialsDir: "../views/emails",
+    extName: ".handlebars",
+    partialsDir: path.resolve(__dirname, "../email_templates"),
     defaultLayout: false,
   },
-  viewPath: path.resolve("../views/emails"),
-  extName: ".handelbars",
+  viewPath: path.resolve(__dirname, "../email_templates"),
+  extName: ".handlebars",
 };
-transporter.use("compile", hbs(handlebarsOptions));
-// testing successsful email sending
+transporter.use("compile", hbs(handlebarOptions));
+// Testing success
 transporter.verify((error, success) => {
   if (error) {
-    console.log(error);
+    console.log("Something went wrong with the email server!".bgRed.white);
   } else {
-    console.log("Server is ready to take our messages".bgRed);
+    console.log("Ready To send Emails".bgWhite.black);
   }
 });
-module.exports = transporter;
+const sendEmail = async (emailOption) => {
+  try {
+    const emailSent = await transporter.sendMail(emailOption);
+    return emailSent;
+  } catch (error) {
+    throw error;
+    console.log(error);
+  }
+};
+module.exports = sendEmail;

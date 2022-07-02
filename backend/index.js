@@ -1,5 +1,4 @@
 const server = require("./server");
-
 // server port
 const port = process.env.PORT || 5000;
 

@@ -11,7 +11,7 @@ const userVerificationSchema = new Schema(
       type: String,
       required: true,
     },
-    route: {
+    howManyTimes: {
       type: Number,
       default: 0,
     },

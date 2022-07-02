@@ -1,11 +1,10 @@
 const asuncHandler = require("express-async-handler");
 const User = require("../user/model");
-const sendVerificationEmail = require("../email_verification_otp/controller");
-// const hashData = require("../../util/hashData");
+const sendVerificationEmail = require("../email_verification_otp");
+const hashData = require("../../util/hashData");
 const generateAccessToken = require("../../util/generateAccessToken");
 const generateRefreshToken = require("../../util/generateRefreshToken");
 const validEmail = require("../../util/validEmail");
-const bcrypt = require("bcryptjs");
 
 // @desc signup user
 // @route Posr /api/auth/signup
@@ -62,13 +61,10 @@ const signup = asuncHandler(async (req, res) => {
   const isValidPassword = password.length >= 8;
   if (!isValidPassword) {
     res.status(401);
-    throw new Error("كلمة المرور غير صالحة");
+    throw new Error("كلمة المرور قصيرة جدا");
   }
   // hash password
-  // const hashedPassword = hashData(password);
-  // console.log(hashedPassword);
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await hashData(password);
   if (!hashedPassword) {
     res.status(401);
     throw new Error("حدث خطأ ما");
