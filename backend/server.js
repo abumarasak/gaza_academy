@@ -2,6 +2,8 @@
 require("./src/config/db");
 // dotenv
 require("dotenv").config();
+// Nodemailer
+require("./src/util/sendEmail");
 // colors
 const colors = require("colors");
 const app = require("express")();
