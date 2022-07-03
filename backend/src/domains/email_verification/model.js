@@ -3,15 +3,17 @@ const Schema = mongoose.Schema;
 const userVerificationSchema = new Schema(
   {
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
+    },
+    email: {
+      type: String,
     },
     otp: {
       type: String,
       required: true,
     },
-    howManyTimes: {
+    attempts: {
       type: Number,
       default: 0,
     },

@@ -6,4 +6,10 @@ const generateAccessToken = (user) => {
     { expiresIn: process.env.JWT_EXPIRATION_TIME }
   );
 };
-module.exports = generateAccessToken;
+const generateRefreshToken = (user) => {
+  return jwt.sign(
+    { id: user._id, isAdmin: user.isAdmin, isActive: user.isActive },
+    process.env.REFRESH_TOKEN_SECRET_KEY
+  );
+};
+module.exports = { generateAccessToken, generateRefreshToken };

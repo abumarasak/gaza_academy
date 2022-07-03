@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { emailVerification } = require("./controller");
+const {} = require("./controller");
 
 // email Verification
-router.post("/", emailVerification);
+router.post("/");
 module.exports = router;

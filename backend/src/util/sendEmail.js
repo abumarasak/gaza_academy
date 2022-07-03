@@ -35,7 +35,6 @@ const sendEmail = async (emailOption) => {
     return emailSent;
   } catch (error) {
     throw error;
-    console.log(error);
   }
 };
 module.exports = sendEmail;

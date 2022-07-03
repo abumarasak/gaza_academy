@@ -7,4 +7,9 @@ const verifyHashedData = async (unhashed, hashed) => {
     console.log(error);
   }
 };
-module.exports = verifyHashedData;
+const hashData = async (data) => {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(data, salt);
+  return hash;
+};
+module.exports = { verifyHashedData, hashData };

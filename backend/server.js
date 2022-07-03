@@ -5,7 +5,7 @@ require("dotenv").config();
 // Nodemailer
 require("./src/util/sendEmail");
 // colors
-const colors = require("colors");
+require("colors");
 const app = require("express")();
 const cors = require("cors");
 const bodyParser = require("body-parser");
