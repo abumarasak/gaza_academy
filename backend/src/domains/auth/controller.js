@@ -156,7 +156,39 @@ const signin = asuncHandler(async (req, res) => {
 // @desc signout user
 // @route Posr /api/auth/signout
 // @access Public
-const signout = asuncHandler(async (req, res) => {});
+const signout = asuncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+  // check if user have all fields
+  if (!refreshToken) {
+    res.status(401);
+    throw new Error("الرجاء ادخال جميع الحقول");
+  }
+  // check if all fields not empty
+  if (refreshToken === "") {
+    res.status(401);
+    throw new Error("الرجاء ادخال جميع الحقول");
+  }
+  // check if refresh token exist
+  const refreshTokenExist = await RefreshToken.findOne({
+    refreshToken,
+  });
+  if (!refreshTokenExist) {
+    res.status(401);
+    throw new Error("الرجاء تسجيل الدخول للمتابعة");
+  }
+  // delete refresh token
+  const deletedRefreshToken = await RefreshToken.deleteOne({
+    refreshToken,
+  });
+  if (!deletedRefreshToken) {
+    res.status(500);
+    throw new Error("حدث خطأ ما");
+  }
+  // send response
+  res.status(200).json({
+    message: "تم تسجيل الخروج بنجاح",
+  });
+});
 
 module.exports = {
   signup,
