@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {} = require("./controller");
+const { refresh_token } = require("./controller");
 
 // email Verification
-router.post("/");
+router.post("/", refresh_token);
 module.exports = router;
