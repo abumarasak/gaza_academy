@@ -85,6 +85,13 @@ const deleteUserById = asuncHandler(async (req, res) => {
     res.status(404);
     throw new Error("المستخدم غير موجود");
   }
+  // delete refresh token
+  const deletedRefreshToken = await RefreshToken.deleteMany({ userId: id });
+  if (!deletedRefreshToken) {
+    res.status(404);
+    throw new Error("المستخدم غير موجود");
+  }
+
   // delete user
   const deletedUser = await User.findByIdAndDelete(id);
   if (!deletedUser) {
@@ -102,14 +109,6 @@ const deleteUserById = asuncHandler(async (req, res) => {
 // @access Private
 const updateUserById = asuncHandler(async (req, res) => {
   const id = req.params.id;
-  const { email, password, isAdmin, isActive } = req.body;
-  // check if user try to update isAdmin or isActive
-  if (!req.user.isAdmin) {
-    if (isAdmin || isActive) {
-      res.status(401);
-      throw new Error("ليس لديك الصلاحيات الكافية");
-    }
-  }
   // check if id is valid
   if (!id) {
     res.status(400);
@@ -120,159 +119,219 @@ const updateUserById = asuncHandler(async (req, res) => {
     res.status(401);
     throw new Error("ليس لديك الصلاحيات الكافية");
   }
-  // check if user want to update email
-  if (email) {
-    //  check if email is valid
-    if (!validEmail(email)) {
-      res.status(400);
-      throw new Error("الرجاء ادخال بريد إلكتروني صالح");
+  // check if user want to change something doesn't exist
+  if (!req.user.isAdmin) {
+    if (req.body.isActive || req.body.isAdmin) {
+      res.status(401);
+      throw new Error("ليس لديك الصلاحيات الكافية");
     }
-    // check if email exist
-    const user = await User.findOne({ email });
+  }
+  // check if user want to change email
+  if (req.body.email) {
+    // check if email is valid
+    if (!validEmail(req.body.email)) {
+      res.status(400);
+      throw new Error("البريد الالكتروني غير صالح");
+    }
+    // check if email is already exist
+    const user = await User.findOne({ email: req.body.email });
     if (user) {
       res.status(400);
       throw new Error("البريد الالكتروني موجود");
     }
-    // check if user want to update password
-    if (password) {
+    // check if user want to change password
+    if (req.body.password) {
       // check if password is valid
-      if (password.length < 6) {
+      if (req.body.password.length < 6) {
         res.status(400);
-        throw new Error("الرجاء ادخال كلمة مرور قوية");
+        throw new Error("كلمة المرور غير صالحة");
       }
       // hash password
-      const hashedPassword = await hashData(password);
+      req.body.password = await hashData(req.body.password);
       // update user
       const updatedUser = await User.findByIdAndUpdate(
         id,
         {
-          email,
-          password: hashedPassword,
-          $set: req.body,
-          isActive: false,
+          $set: {
+            ...req.body,
+            isActive: false,
+          },
         },
         { new: true }
       );
       if (!updatedUser) {
         res.status(500);
-        throw new Error("حدث خطأ أثناء تحديث البيانات");
+        throw new Error("حدث خطأ ما");
       }
-      // send email to user for email verification
+      // delete refresh token
+      const deletedRefreshToken = await RefreshToken.deleteMany({
+        userId: id,
+      });
+      if (!deletedRefreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // send email verification
+      await emailVerificationOtp(updatedUser, res);
+    } else {
+      // update user
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            ...req.body,
+            isActive: false,
+          },
+        },
+        { new: true }
+      );
+      if (!updatedUser) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // delete refresh token
+      const deletedRefreshToken = await RefreshToken.deleteMany({
+        userId: id,
+      });
+      if (!deletedRefreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // send email verification
       await emailVerificationOtp(updatedUser, res);
     }
-    // update user
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      {
-        email,
-        $set: req.body,
-        isActive: false,
-      },
-      { new: true }
-    );
-    if (!updatedUser) {
-      res.status(500);
-      throw new Error("حدث خطأ أثناء تحديث البيانات");
+  } else {
+    //   check if user want to change password
+    if (req.body.password) {
+      // check if password is valid
+      if (req.body.password.length < 6) {
+        res.status(400);
+        throw new Error("كلمة المرور غير صالحة");
+      }
+      // hash password
+      req.body.password = await hashData(req.body.password);
+      // update user
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            ...req.body,
+          },
+        },
+        { new: true }
+      );
+      if (!updatedUser) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // delete refresh token
+      const deletedRefreshToken = await RefreshToken.deleteMany({
+        userId: id,
+      });
+      if (!deletedRefreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // generate new refresh token
+      const refreshToken = await generateRefreshToken(updatedUser);
+      if (!refreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // send refresh token to database
+      const newRefreshToken = await RefreshToken.create({
+        userId: updatedUser._id,
+        token: refreshToken,
+      });
+      if (!newRefreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      //   generate new access token
+      const accessToken = await generateAccessToken(updatedUser);
+      if (!accessToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      //   send response
+      res.status(200).json({
+        message: "تم تحديث المستخدم بنجاح",
+        accessToken,
+        refreshToken,
+        user: {
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          city: updatedUser.city,
+          address: updatedUser.address,
+          phoneNumber: updatedUser.phoneNumber,
+          image: updatedUser.image,
+          isAdmin: updatedUser.isAdmin,
+          isActive: updatedUser.isActive,
+        },
+      });
+    } else {
+      // update user
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            ...req.body,
+          },
+        },
+        { new: true }
+      );
+      if (!updatedUser) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // delete refresh token
+      const deletedRefreshToken = await RefreshToken.deleteMany({
+        userId: id,
+      });
+      if (!deletedRefreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // generate new refresh token
+      const refreshToken = await generateRefreshToken(updatedUser);
+      if (!refreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      // send refresh token to database
+      const newRefreshToken = await RefreshToken.create({
+        userId: updatedUser._id,
+        token: refreshToken,
+      });
+      if (!newRefreshToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      //   generate new access token
+      const accessToken = await generateAccessToken(updatedUser);
+      if (!accessToken) {
+        res.status(500);
+        throw new Error("حدث خطأ ما");
+      }
+      //   send response
+      res.status(200).json({
+        message: "تم تحديث المستخدم بنجاح",
+        accessToken,
+        refreshToken,
+        user: {
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          city: updatedUser.city,
+          address: updatedUser.address,
+          phoneNumber: updatedUser.phoneNumber,
+          image: updatedUser.image,
+          isAdmin: updatedUser.isAdmin,
+          isActive: updatedUser.isActive,
+        },
+      });
     }
-    // send email to user for email verification
-    await emailVerificationOtp(updatedUser, res);
   }
-  // check if user want to update password
-  if (password) {
-    // check if password is valid
-    if (password.length < 6) {
-      res.status(400);
-      throw new Error("الرجاء ادخال كلمة مرور قوية");
-    }
-    // hash password
-    const hashedPassword = await hashData(password);
-    // update user
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      {
-        $set: req.body,
-        password: hashedPassword,
-      },
-      { new: true }
-    );
-    if (!updatedUser) {
-      res.status(500);
-      throw new Error("حدث خطأ أثناء تحديث البيانات");
-    }
-    // generate access token
-    const accessToken = generateAccessToken(updatedUser);
-    // generate refresh token
-    const refreshToken = generateRefreshToken(updatedUser);
-    // send refresh token to db
-    const newRefreshToken = await RefreshToken.create({
-      userId: updatedUser._id,
-      token: refreshToken,
-    });
-    if (!newRefreshToken) {
-      res.status(500);
-      throw new Error("حدث خطأ أثناء تحديث البيانات");
-    }
-    // send the response
-    res.status(200).json({
-      message: "تم تحديث البيانات بنجاح",
-      accessToken,
-      refreshToken,
-      user: {
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        city: updatedUser.city,
-        address: updatedUser.address,
-        phoneNumber: updatedUser.phoneNumber,
-        image: updatedUser.image,
-        isAdmin: updatedUser.isAdmin,
-        isActive: updatedUser.isActive,
-      },
-    });
-  }
-
-  // update user
-  const updatedUser = await User.findByIdAndUpdate(
-    id,
-    {
-      $set: req.body,
-    },
-    { new: true }
-  );
-  if (!updatedUser) {
-    res.status(500);
-    throw new Error("حدث خطأ أثناء تحديث البيانات");
-  }
-  // generate access token
-  const accessToken = generateAccessToken(updatedUser);
-  // generate refresh token
-  const refreshToken = generateRefreshToken(updatedUser);
-  // send refresh token to db
-  const newRefreshToken = await RefreshToken.create({
-    userId: updatedUser._id,
-    token: refreshToken,
-  });
-  if (!newRefreshToken) {
-    res.status(500);
-    throw new Error("حدث خطأ أثناء تحديث البيانات");
-  }
-  // send the response
-
-  res.status(200).json({
-    message: "تم تحديث البيانات بنجاح",
-    accessToken,
-    refreshToken,
-    user: {
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      city: updatedUser.city,
-      address: updatedUser.address,
-      phoneNumber: updatedUser.phoneNumber,
-      image: updatedUser.image,
-      isAdmin: updatedUser.isAdmin,
-      isActive: updatedUser.isActive,
-    },
-  });
 });
 module.exports = { getUserById, getAllUsers, deleteUserById, updateUserById };
