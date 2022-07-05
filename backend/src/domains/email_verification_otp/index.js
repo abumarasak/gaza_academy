@@ -1,5 +1,5 @@
 const sendEmail = require("../../util/sendEmail");
-const UserVerification = require("../../domains/email_verification/model");
+const UserVerification = require("../email_verification/model");
 const generateOTP = require("../../util/generateOTP");
 const asuncHandler = require("express-async-handler");
 const { hashData } = require("../../util/bcrypt");
