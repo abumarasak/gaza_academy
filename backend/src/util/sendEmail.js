@@ -26,7 +26,7 @@ transporter.verify((error, success) => {
   if (error) {
     console.log("Something went wrong with the email server!".bgRed.white);
   } else {
-    console.log("Ready To send Emails".bgWhite.black);
+    console.log("Ready To send Emails".green.underline.bold);
   }
 });
 const sendEmail = async (emailOption) => {

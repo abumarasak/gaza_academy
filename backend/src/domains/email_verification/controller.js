@@ -5,7 +5,7 @@ const { verifyHashedData, hashData } = require("../../util/bcrypt");
 const sendEmail = require("../../util/sendEmail");
 const generateOTP = require("../../util/generateOTP");
 // @desc email verification
-// @route Posr /api/email_verification
+// @route Post /api/email_verification
 // @access Public
 const emailVerification = asuncHandler(async (req, res) => {
   const { email, otp } = req.body;
