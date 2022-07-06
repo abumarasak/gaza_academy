@@ -1,0 +1,16 @@
+.cookie .container {
+  position: fixed;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 10px;
+  height: 100px;
+  z-index: 9999;
+  width: 80%;
+  border-radius: 10px;
+  transition: all 1s ease-in-out;
+}
+.cookie .container.active {
+  bottom: 10px;
+}

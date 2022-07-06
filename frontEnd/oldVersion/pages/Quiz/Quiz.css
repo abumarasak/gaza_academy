@@ -1,0 +1,99 @@
+.quiz {
+  min-height: calc(100vh - 100px);
+  margin-top: 10vh;
+}
+.quiz .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.quiz .container .box {
+  background-color: #2196f312;
+  width: 60%;
+  min-height: 300px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: #fff 0px 54px 55px, #fff 0px -12px 30px, #fff 0px 4px 6px,
+    #fff 0px 12px 13px, #fff 0px -3px 5px;
+  color: #fff;
+}
+.quiz .container .box.count {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.quiz .container .box .count {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #aaa;
+  margin: auto;
+}
+.quiz .container .box.count button {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2196f3;
+  color: #fff;
+  padding: 0 10px;
+  font-size: 1.2rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.quiz .container .box .quiz-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.quiz .container .box .quiz-question {
+  margin-bottom: 30px;
+  color: #aaa;
+}
+.quiz .container .box .quiz-answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+.quiz .container .box .quiz-answers .answer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-radius: 5px;
+  background-color: #aaa;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  color: #fff;
+}
+.quiz .container .box .quiz-answers .answer.false {
+  background-color: #f44336;
+}
+.quiz .container .box .quiz-answers .answer.true {
+  background-color: #4caf50;
+}
+.quiz .container .box .next-question button {
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2196f3;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  color: #fff;
+  margin-top: 30px;
+}
+@media (max-width: 992px) {
+  .quiz .container .box {
+    width: 100%;
+    margin-bottom: 100px;
+  }
+  .quiz .container .box .quiz-answers {
+    grid-template-columns: 1fr;
+  }
+}

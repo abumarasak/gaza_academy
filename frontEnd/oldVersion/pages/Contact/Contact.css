@@ -1,0 +1,108 @@
+.contact {
+  min-height: calc(100vh - 100px);
+}
+.contact .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-top: 70px;
+}
+.contact .container .contact-info {
+  color: #fff;
+}
+
+.contact .container .contact-info h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.contact .container .contact-info p {
+  font-size: 20px;
+  color: #aaa;
+  margin: 0 25px 20px 0;
+  position: relative;
+}
+
+.contact .container .contact-info .icon {
+  font-size: 30px;
+  position: absolute;
+  right: -45px;
+  top: 0;
+  color: #2196f3;
+}
+
+.contact .container .form-box .box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.contact .container .form-box .box input {
+  padding: 10px;
+  border: 3px solid #2196f3;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  font-size: 16px;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  width: 100%;
+}
+.contact .container .form-box textarea {
+  width: 100%;
+  padding: 10px;
+  border: 3px solid #2196f3;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  font-size: 16px;
+  outline: none;
+  height: 200px;
+  background-color: transparent;
+  color: #fff;
+  resize: none;
+}
+.contact .container .form-box button {
+  width: 150px;
+  padding: 10px;
+  border: 3px solid #2196f3;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  margin-left: 20px;
+  font-size: 20px;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  text-align: right;
+}
+.contact .container .form-box button .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2196f3;
+}
+@media (max-width: 992px) {
+  .contact .container {
+    grid-template-columns: 1fr;
+    margin-bottom: 60px;
+    row-gap: 20px;
+  }
+
+  .contact .container .contact-info p {
+    margin: 0;
+  }
+}
+@media (max-width: 768px) {
+  .contact .container .form-box .box {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+@media (max-width: 576px) {
+  .contact .container .form-box button {
+    width: 100%;
+  }
+}

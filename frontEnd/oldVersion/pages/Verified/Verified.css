@@ -1,0 +1,83 @@
+.verified {
+  min-height: calc(100vh - 100px);
+}
+.verified .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.verified .container .box {
+  background-color: #2196f312;
+  width: 60%;
+  min-height: 300px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: #fff 0px 54px 55px, #fff 0px -12px 30px, #fff 0px 4px 6px,
+    #fff 0px 12px 13px, #fff 0px -3px 5px;
+  color: #fff;
+  text-align: center;
+}
+.verified .container .box h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #aaa;
+}
+.verified .container .box svg {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #aaa;
+}
+.verified .container .box .icon {
+  font-size: 80px;
+  margin-top: 30px;
+  color: #d72828;
+}
+.verified .container .box .animated {
+  background-repeat: no-repeat;
+  background-position: left top;
+  -webkit-animation-duration: 10s;
+  animation-duration: 10s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.verified .container .box .swing {
+  -webkit-transform-origin: top center;
+  transform-origin: top center;
+  -webkit-animation-name: swing;
+  animation-name: swing;
+}
+.verified .container .box h3 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #aaa;
+  margin-bottom: 30px;
+}
+.verified .container .box .sign-in {
+  background-color: #2196f3;
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: #fff;
+}
+@keyframes swing {
+  20% {
+    transform: rotate(15deg);
+  }
+  40% {
+    transform: rotate(-10deg);
+  }
+  60% {
+    transform: rotate(5deg);
+  }
+  80% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@media (max-width: 768px) {
+  .verified .container .box {
+    width: 80%;
+  }
+}

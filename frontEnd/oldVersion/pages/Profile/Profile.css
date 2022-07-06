@@ -1,0 +1,128 @@
+.profile {
+  min-height: calc(100vh - 100px);
+}
+.profile .container {
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 30px;
+}
+.profile .container .box {
+  background-color: #2196f312;
+  width: 60%;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: #fff 0px 54px 55px, #fff 0px -12px 30px, #fff 0px 4px 6px,
+    #fff 0px 12px 13px, #fff 0px -3px 5px;
+  position: relative;
+}
+.profile .container .box .delete {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.profile .container .box .delete button {
+  background-color: #f44336;
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+}
+.profile .container .box .delete button .icon {
+  margin-left: 5px;
+}
+.profile .container label.image-label {
+  position: relative;
+}
+.profile .container img.userImage {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  /* margin-bottom: 20px; */
+  border: 5px solid #2196f3;
+  cursor: pointer;
+}
+.profile .container .img-input {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.profile .container label.image-label .icon {
+  position: absolute;
+  bottom: 30px;
+  right: 10px;
+  cursor: pointer !important;
+  color: #000;
+  font-size: 40px;
+  background-color: #aaa;
+  padding: 10px;
+  border-radius: 50%;
+}
+.profile .container .img-input input {
+  display: none;
+}
+
+.profile .container .form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.profile .container .form-group.password2 {
+  display: none;
+}
+
+.profile .container .form-group.password2.active {
+  display: flex;
+}
+
+.profile .container .form-group label {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #aaa;
+  /* margin: 10px 0; */
+}
+.profile .container .form-group input {
+  width: 100%;
+  height: 50px;
+
+  border: none;
+  border-bottom: 3px solid #2196f3;
+  outline: none;
+  padding: 0 10px;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #aaa;
+  margin-bottom: 10px;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.profile .container .form-group button {
+  width: 100%;
+  height: 50px;
+  border-radius: 5px;
+  border: 3px solid #fff;
+  outline: none;
+  padding: 0 10px;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #fff;
+  /* margin-bottom: 30px; */
+  background-color: #2196f3;
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .profile .container .box {
+    width: 100%;
+    margin-bottom: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile .container .img-input {
+    margin-top: 40px;
+  }
+}

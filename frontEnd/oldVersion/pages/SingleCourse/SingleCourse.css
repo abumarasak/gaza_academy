@@ -1,0 +1,100 @@
+.single-course {
+  min-height: calc(100vh - 100px);
+}
+.single-course .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10vh;
+  flex-direction: column;
+}
+.single-course .container .box {
+  background-color: #2196f312;
+  width: 100%;
+  min-height: 100%;
+
+  max-height: 500px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: #fff 0px 54px 55px, #fff 0px -12px 30px, #fff 0px 4px 6px,
+    #fff 0px 12px 13px, #fff 0px -3px 5px;
+  color: #fff;
+  display: grid;
+  grid-template-rows: 10% 90%;
+}
+.single-course .container .box .box-header {
+  text-align: center;
+  color: #aaa;
+}
+.single-course .container .box .box-body {
+  display: grid;
+  grid-template-columns: 35% 1fr;
+}
+.single-course .container .box .box-body .lessons {
+  padding-left: 20px;
+  padding-right: 20px;
+  border-left: 3px solid #2196f3;
+  overflow-y: scroll;
+  direction: ltr;
+  max-height: 100%;
+}
+.single-course .container .box .box-body .lessons .lesson {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  gap: 20px;
+  padding: 20px;
+  border-bottom: 1px solid #2196f3;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+}
+.single-course .container .box .box-body .lessons .lesson.active {
+  background-color: #2196f3;
+}
+.single-course .container .box .box-body .lessons .lesson-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.single-course .container .box .box-body .video {
+  padding-left: 20px;
+  padding-right: 20px;
+  display: grid;
+  grid-template-rows: 90% 10%;
+}
+.single-course .container .box .box-body .video video,
+.single-course .container .box .box-body .video iframe {
+  width: 100%;
+  max-height: 100%;
+}
+
+.single-course .container .box .box-body .video .info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.single-course .container .box .box-body .video .info h3 {
+  color: #fff;
+}
+.single-course .container .box .box-body .video .info a {
+  color: #fff;
+  background-color: #2196f3;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+@media (max-width: 992px) {
+  .single-course .container .box {
+    min-height: 700px;
+  }
+  .single-course .container .box .box-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 70% 30%;
+  }
+  .single-course .container .box .box-body .lessons {
+    margin-top: 40px;
+    grid-row: 2/3;
+    border-left: none;
+    border-top: 3px solid #2196f3;
+    padding-top: 20px;
+  }
+}

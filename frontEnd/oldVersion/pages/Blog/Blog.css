@@ -1,0 +1,78 @@
+.blog .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.blog .container .title {
+  background-color: #2196f3;
+  color: #fff;
+  padding: 0 15px;
+  font-size: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+.blog .container .posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.blog .container .posts .post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 10px;
+}
+.blog .container .posts .post .img {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+}
+.blog .container .posts .post .img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.blog .container .posts .post .content {
+  background-color: #000;
+  margin: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+.blog .container .posts .post .content h3 {
+  color: #fff;
+  font-size: 20px;
+}
+.blog .container .posts .post .content p {
+  font-size: 15px;
+  color: #ddd;
+}
+.blog .container .posts .post .button {
+  background-color: #2196f3;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.blog .container .posts .post .button a {
+  color: #fff;
+  font-size: 20px;
+}
+@media (max-width: 992px) {
+  .blog .container .posts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 630px) {
+  .blog .container .posts {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
