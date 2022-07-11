@@ -8,12 +8,14 @@ const {
 } = require("../../util/token");
 const RefreshToken = require("../refresh_token/model");
 const validEmail = require("../../util/validEmail");
-
+const {uploadFile} = require("../../util/s3");
+const util = require("util");
+const unlinkFile = util.promisify(require("fs").unlink);
 // @desc signup user
 // @route Posr /api/auth/signup
 // @access Public
 const signup = asuncHandler(async (req, res) => {
-  const { name, email, password, city, address, gender, phoneNumber, image } =
+  const { name, email, password, city, address, gender, phoneNumber } =
     req.body;
   // check if user have all fields
   if (
@@ -23,8 +25,7 @@ const signup = asuncHandler(async (req, res) => {
     !city ||
     !address ||
     !gender ||
-    !phoneNumber ||
-    !image
+    !phoneNumber 
   ) {
     res.status(401);
     throw new Error("الرجاء ادخال جميع الحقول");
@@ -36,8 +37,7 @@ const signup = asuncHandler(async (req, res) => {
     password === "" ||
     city === "" ||
     address === "" ||
-    phoneNumber === "" ||
-    image === ""
+    phoneNumber === "" 
   ) {
     res.status(401);
     throw new Error("الرجاء ادخال جميع الحقول");
@@ -72,6 +72,19 @@ const signup = asuncHandler(async (req, res) => {
     res.status(401);
     throw new Error("حدث خطأ ما");
   }
+  // upload image
+  const image = req.file
+  if(!image){
+    res.status(401);
+    throw new Error("الرجاء رفع صورة");
+  }
+ 
+  const imageUrl = await uploadFile(image);
+  
+  if(!imageUrl){
+    res.status(401);
+    throw new Error("حدث خطأ ما");
+  }
   // create user
   const newUser = await User.create({
     name,
@@ -80,8 +93,8 @@ const signup = asuncHandler(async (req, res) => {
     city,
     address,
     phoneNumber,
-    image,
     gender,
+    image : imageUrl.Key,
     isActive: false,
     isAdmin: false,
   });
@@ -89,6 +102,7 @@ const signup = asuncHandler(async (req, res) => {
     res.status(500);
     throw new Error("حدث خطأ ما");
   }
+  await unlinkFile(image.path)
   // send verification email
   await emailVerificationOtp(newUser, res);
 });
@@ -136,6 +150,7 @@ const signin = asuncHandler(async (req, res) => {
     res.status(500);
     throw new Error("حدث خطأ ما");
   }
+  
   // send response
   res.status(200).json({
     accessToken,
@@ -189,6 +204,8 @@ const signout = asuncHandler(async (req, res) => {
     message: "تم تسجيل الخروج بنجاح",
   });
 });
+
+
 
 module.exports = {
   signup,

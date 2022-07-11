@@ -8,6 +8,7 @@ const {
 const { hashData } = require("../../util/bcrypt");
 const validEmail = require("../../util/validEmail");
 const emailVerificationOtp = require("../email_verification_otp");
+const {unlinkFile} = require("../../util/s3");
 
 // @desc get user by id
 // @route get /api/user/:id
@@ -47,23 +48,22 @@ const getUserById = asuncHandler(async (req, res) => {
 // @route get /api/user/
 // @access Private
 const getAllUsers = asuncHandler(async (req, res) => {
+  const {search } = req.query;
   // check if user if admin
   if (!req.user.isAdmin) {
     res.status(401);
     throw new Error("ليس لديك الصلاحيات الكافية");
   }
-  // get all users without password
-  const users = await User.find(
-    {},
-    { password: 0, __v: 0, createdAt: 0, updatedAt: 0 }
-  );
-  // check if users more than 0
-  if (users.length === 0) {
-    res.status(404);
-    throw new Error("لا يوجد مستخدمين");
+  if(search){
+    const query = {$or: [{name: {$regex: search, $options: "i"}}, {phoneNumber: {$regex: search, $options: "i"}}, {address: {$regex: search, $options: "i"}}, {city: {$regex: search, $options: "i"}}, {email: {$regex: search, $options: "i"}}]};
+    const users = await User.find(query).select("-password");
+    res.status(200).json(users);
+  
+  }else {
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
   }
-  // send the response
-  res.status(200).json(users);
+  
 });
 // @desc delete user by id
 // @route delete /api/user/id
@@ -98,6 +98,9 @@ const deleteUserById = asuncHandler(async (req, res) => {
     res.status(404);
     throw new Error("المستخدم غير موجود");
   }
+  // delete image from s3
+  const deleteImage = await unlinkFile(user.image);
+  console.log(deleteImage);
   // send the response
   res.status(200).json({
     message: "تم حذف المستخدم بنجاح",

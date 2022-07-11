@@ -14,3 +14,9 @@ router.use("/api/refresh_token", refreshTokenRoutes);
 const userRoutes = require("../domains/user");
 router.use("/api/user", userRoutes);
 module.exports = router;
+// blog
+const blogRoutes = require("../domains/blog");
+router.use("/api/blog", blogRoutes);
+// get files
+const getFilesRoutes = require("../domains/get_files");
+router.use("/api/get_files", getFilesRoutes);
