@@ -11,6 +11,8 @@ const validEmail = require("../../util/validEmail");
 const {uploadFile} = require("../../util/s3");
 const util = require("util");
 const unlinkFile = util.promisify(require("fs").unlink);
+const validImage = require("../../util/validImage");
+const validPhoneNumber = require("../../util/validPhoneNumber");
 // @desc signup user
 // @route Posr /api/auth/signup
 // @access Public
@@ -48,6 +50,12 @@ const signup = asuncHandler(async (req, res) => {
     res.status(401);
     throw new Error("البريد الإلكتروني مستخدم من قبل");
   }
+  // check if phoneNumber is valid
+  const isValidPhoneNumber =await validPhoneNumber(phoneNumber);
+  if (!isValidPhoneNumber) {
+    res.status(401);
+    throw new Error("رقم الهاتف غير صحيح");
+  }
   // check if phone number already exist
   const userPhone = await User.findOne({ phoneNumber });
   if (userPhone) {
@@ -72,14 +80,19 @@ const signup = asuncHandler(async (req, res) => {
     res.status(401);
     throw new Error("حدث خطأ ما");
   }
-  // upload image
-  const image = req.file
-  if(!image){
+  // check if image is valid
+   
+  if(!req.file){
     res.status(401);
     throw new Error("الرجاء رفع صورة");
   }
- 
-  const imageUrl = await uploadFile(image);
+  const isValidImage = await validImage(req.file);
+  if (!isValidImage) {
+    res.status(401);
+    throw new Error("الصورة غير صالحة");
+  }
+  // upload image
+  const imageUrl = await uploadFile(req.file);
   
   if(!imageUrl){
     res.status(401);
@@ -102,7 +115,7 @@ const signup = asuncHandler(async (req, res) => {
     res.status(500);
     throw new Error("حدث خطأ ما");
   }
-  await unlinkFile(image.path)
+  await unlinkFile(req.file.path)
   // send verification email
   await emailVerificationOtp(newUser, res);
 });
