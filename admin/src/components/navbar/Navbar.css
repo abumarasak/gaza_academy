@@ -1,0 +1,89 @@
+nav {
+  background-color: #fff;
+  width: calc(100% - 240px);
+  height: 80px;
+  position: relative;
+
+  right: 240px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease-in-out;
+}
+nav.active {
+  width: calc(100% - 60px);
+  right: 60px;
+}
+
+nav .sidebar-button {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 55;
+}
+nav .sidebar-button svg {
+  font-size: 30px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+nav .search-box {
+  height: 50px;
+  width: 550px;
+  margin: 0px 20px;
+  position: relative;
+}
+nav .search-box input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  padding: 0 20px;
+  font-size: 17px;
+  background-color: #f5f6fa;
+  border: 2px solid #efeef1;
+  outline: none;
+}
+nav .search-box svg {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 40px;
+  width: 40px;
+  background-color: #2697ff;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 22px;
+  line-height: 40px;
+  text-align: center;
+}
+nav .profile-details {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  min-width: 190px;
+  background-color: #f5f6fa;
+  border: 2px solid #efeef1;
+  border-radius: 6px;
+  padding: 0px 15px 0px 2px;
+}
+nav .profile-details img {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+nav .profile-details .admin_name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin: 0px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+nav .profile-details .admin_name svg {
+  color: #333;
+  font-size: 25px;
+  cursor: pointer;
+}
